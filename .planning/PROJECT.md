@@ -2,49 +2,68 @@
 
 ## What This Is
 
-Nexyrasoft is a comprehensive IT company offering custom software development, managed IT services (MSP), and proprietary SaaS products. The project is an ongoing enhancement of the existing React/Express application to build out dynamic capabilities, starting with a careers portal, role-based admin access, and UI improvements.
+A comprehensive IT company website that offers custom development services, managed IT, and SaaS products. It serves as both a marketing site to drive leads (booking calls) and an operational platform with an admin dashboard for content and user management.
 
 ## Core Value
 
-To drive leads and build trust by providing a fast, visually stunning, and feature-complete IT services and product portal.
+Providing a seamless, professional digital presence that builds trust through case studies and effectively captures leads while allowing easy internal management.
 
 ## Requirements
 
 ### Validated
 
-- ✓ Component-based React SPA frontend with routing (Vite, Tailwind CSS, 3D graphics)
-- ✓ Express backend API connected to MongoDB via Mongoose
-- ✓ Core marketing pages (Home, Services, Tools, About, Contact)
-- ✓ Basic Admin Dashboard and Authentication framework
+- ✓ Frontend SPA with React/Vite — existing
+- ✓ Public marketing pages (Home, About, Services, Contact, Careers, etc.) — existing
+- ✓ Backend Express API with MongoDB connection — existing
+- ✓ Admin Login and Dashboard skeleton — existing
+- ✓ 3D Background and modern UI elements — existing
 
 ### Active
 
-- [ ] **Dynamic Careers Portal**: Connect the public Careers section to the Admin dashboard to allow posting and managing job vacancies.
-- [ ] **Role-Based Access Control**: Ability to create and manage users based on roles (e.g., admin, editor, HR) within the Admin Dashboard.
-- [ ] **UI Enhancements**: Add a drag-to-scroll option in the expertise slideshow section.
+- [ ] Connect career section to admin page to manage and post job vacancies dynamically
+- [ ] Add drag option/support in the expertise slideshow section for better UX
+- [ ] Implement role-based user creation and management in the admin dashboard
+- [ ] Make the chatbox fully functional
 
 ### Out of Scope
 
-- Comprehensive Applicant Tracking System (ATS) — For v1, simple job postings are sufficient; full ATS capabilities are deferred.
-- Complex SaaS product features — Focus is currently on marketing and internal admin tooling.
+- [Advanced SaaS Billing] — Not requested for this phase, focus is on content management and engagement
+- [Complex Ticketing System] — Defer to future phase; focus is on lead generation first
 
 ## Context
 
-- **Environment**: Monolithic full-stack structure (React frontend + Express backend in the same repo).
-- **Current State**: The UI is largely built out, but many data-driven sections (like Careers) are currently static or require admin integration.
-- **Goals**: Move from static sections to dynamic, admin-controlled content, while ensuring the admin portal is secure through role-based access.
+- The project is an existing monolithic full-stack app (React frontend + Express backend).
+- The primary goal for visitors is to schedule a consultation/book a call and view the portfolio/case studies.
+- The user wants to polish the existing application and make key sections dynamic (Careers) and interactive (Slideshow, Chatbox).
 
 ## Constraints
 
-- **Tech Stack**: Must use the existing stack (TypeScript, React 19, Tailwind CSS, Express, MongoDB).
-- **Security**: Role-based access must securely restrict backend endpoints and frontend admin views.
+- **Tech Stack**: Must use the existing stack (React 19, Vite, Tailwind CSS, Express, MongoDB, Node.js).
+- **Architecture**: Must integrate with the existing Admin Dashboard patterns.
 
 ## Key Decisions
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Implement RBAC | Needed to securely delegate admin tasks (like posting jobs) without giving full superuser access | — Pending |
-| Extend MongoDB Schema | Mongoose is already configured; adding Job and User Role models is the most efficient path | — Pending |
+| Manage Vacancies via Admin | Hardcoding jobs is unscalable; needs a CMS-like approach | — Pending |
+| Role-based Admin Users | Different team members need different access levels | — Pending |
 
 ---
 *Last updated: 2026-04-26 after initialization*
+
+## Evolution
+
+This document evolves at phase transitions and milestone boundaries.
+
+**After each phase transition** (via `/gsd-transition`):
+1. Requirements invalidated? → Move to Out of Scope with reason
+2. Requirements validated? → Move to Validated with phase reference
+3. New requirements emerged? → Add to Active
+4. Decisions to log? → Add to Key Decisions
+5. "What This Is" still accurate? → Update if drifted
+
+**After each milestone** (via `/gsd-complete-milestone`):
+1. Full review of all sections
+2. Core Value check — still the right priority?
+3. Audit Out of Scope — reasons still valid?
+4. Update Context with current state
