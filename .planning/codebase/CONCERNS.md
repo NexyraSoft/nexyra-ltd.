@@ -13,21 +13,18 @@
 
 ## Security
 
-### 🔴 Gemini API Key Exposed in Client Bundle
-- **File:** `vite.config.ts` (L11), `.env`
-- **Issue:** `GEMINI_API_KEY` is injected at build time via Vite `define` and inlined into the JS bundle. Any user who opens DevTools can read it.
-- **Impact:** Key theft, abuse of Gemini quota, potential billing impact.
-- **Fix:** Move all Gemini calls server-side only. The `/api/chatbot` proxy already exists — remove the client-side Gemini SDK usage entirely.
+### ✅ ~~🔴 Gemini API Key Exposed in Client Bundle~~ — RESOLVED (commit 6f36145)
+- Removed `GEMINI_API_KEY` from `vite.config.ts` `define` block — key is no longer inlined into the client bundle.
+- All AI calls already proxy through `/api/chatbot` server-side; no client-side Gemini SDK usage was found.
 
-### 🔴 No Client-Side Route Guard on `/admin`
-- **File:** `src/App.tsx` (L70), `src/pages/admin/AdminDashboard.tsx`
-- **Issue:** The `/admin` route renders `AdminDashboard` without a React-level auth check. `AdminDashboard` performs an API call on mount and redirects to `/admin/login` if it fails — but the component renders first, briefly exposing the admin UI shell.
-- **Fix:** Implement a `<ProtectedRoute>` wrapper component that checks `authService.getToken()` and redirects before rendering children.
+### ✅ ~~🔴 No Client-Side Route Guard on `/admin`~~ — RESOLVED (commit 6f36145)
+- Created `src/components/layout/ProtectedRoute.tsx` — checks `authService.getToken()` and redirects to `/admin/login` before rendering.
+- `App.tsx` updated: `/admin` route is now wrapped with `<ProtectedRoute>`.
 
-### 🟠 Public Signup Endpoint Disabled via Code, Not Route
-- **File:** `server/src/controllers/authController.ts` (L28-30)
-- **Issue:** `POST /api/auth/signup` exists as a route but returns `403` from the controller. The route is still accessible and discoverable.
-- **Fix:** Remove the signup route entirely from `authRoutes.ts` rather than handling it in the controller.
+### ✅ ~~🟠 Public Signup Endpoint Disabled via Code, Not Route~~ — RESOLVED (commit 6f36145)
+- Removed `router.post("/signup", signup)` from `server/src/routes/authRoutes.ts` entirely.
+- The `signup` controller export is no longer imported or exposed.
+
 
 ### 🟠 JWT Stored in `localStorage`
 - **File:** `src/lib/auth.ts` (L31-33), key: `nexyrasoft_token`
@@ -49,11 +46,11 @@
 
 ## Performance
 
-### 🔴 O(n²) Frame Loop in Background3D
-- **File:** `src/components/ui/Background3D.tsx` (L88-117, `Lines` component)
-- **Issue:** Every animation frame, all 100×100 point pairs are checked for proximity (4,950 iterations/frame at 60fps = ~300,000 ops/sec). This runs continuously while `Background3D` is mounted.
-- **Impact:** Degrades main thread performance, especially on mobile. Known cause of startup lag.
-- **Fix:** Use a spatial hash or reduce node count significantly. Or pre-compute static connections and only update positions, not topology.
+### ✅ ~~🔴 O(n²) Frame Loop in Background3D~~ — RESOLVED (commit 6f36145)
+- Node count reduced 100 → 50 (pair checks per frame: 4,950 → 1,225).
+- Connection topology throttled to every 6 frames (~10 Hz) via frame counter.
+- Distance check uses squared distance, eliminating `Math.sqrt` per pair.
+- Canvas `dpr` cap reduced from `[1, 2]` to `[1, 1.5]`.
 
 ### 🟠 Two Simultaneous WebGL Contexts at Hero Page Load
 - **Files:** `src/components/ui/Preloader.tsx`, `src/components/ui/Background3D.tsx`, `src/components/sections/Hero.tsx`
