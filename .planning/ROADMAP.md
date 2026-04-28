@@ -15,4 +15,8 @@
 ### Phase 3: Interactive Features (Slideshow & Chatbox)
 **Goal:** Improve UX by adding drag support to the expertise slideshow and making the chatbot functional.
 **Requirements:** UX-01, CHAT-01
-**Status:** Pending
+**Status:** Complete (2026-04-27)
+
+**Wave 1**
+- `03-01` Drag-enabled hero expertise ticker on the public homepage (`UX-01`)
+- `03-02` Backend-mediated chatbot with contact/lead handoff (`CHAT-01`)

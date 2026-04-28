@@ -16,10 +16,10 @@
 - [ ] **ADMIN-03**: Dashboard navigation/access is restricted based on user role
 
 ### User Experience (UX)
-- [ ] **UX-01**: Expertise slideshow section supports mouse/touch drag interactions
+- [x] **UX-01**: Expertise slideshow section supports mouse/touch drag interactions
 
 ### Communication
-- [ ] **CHAT-01**: Chatbox is fully functional and can send/receive messages or capture leads
+- [x] **CHAT-01**: Chatbox is fully functional and can send/receive messages or capture leads
 
 ## Traceability
 
@@ -31,8 +31,8 @@
 | ADMIN-01    | Phase 2 | Pending |
 | ADMIN-02    | Phase 2 | Pending |
 | ADMIN-03    | Phase 2 | Pending |
-| UX-01       | Phase 3 | Pending |
-| CHAT-01     | Phase 3 | Pending |
+| UX-01       | Phase 3 | Complete |
+| CHAT-01     | Phase 3 | Complete |
 
 **Coverage:**
 - v1 requirements: 8 total
@@ -41,4 +41,4 @@
 
 ---
 *Requirements defined: 2026-04-26*
-*Last updated: 2026-04-26 after initial definition*
+*Last updated: 2026-04-27 after Phase 3 execution*
