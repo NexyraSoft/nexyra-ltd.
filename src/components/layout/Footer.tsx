@@ -62,10 +62,10 @@ export const Footer = () => {
             </p>
             <div className="flex gap-4">
               {[
-                { Icon: Facebook, href: "#" },
+                { Icon: Facebook, href: "https://www.facebook.com/share/18ijBucTGp/" },
                 { Icon: Linkedin, href: "https://www.linkedin.com/in/nexyrasoft/" },
                 { Icon: Mail, href: "mailto:nexyrasoft@gmail.com" },
-                { Icon: MessageSquare, href: "#" }
+                { Icon: MessageSquare, href: "https://wa.me/8801612287424" }
               ].map((social, i) => (
                 <a
                   key={i}
@@ -144,7 +144,7 @@ export const Footer = () => {
                 <div>
                   <div className="font-bold text-sm mb-1">Virtual Office</div>
                   <p className="text-sm text-maroon-100/70 leading-relaxed">
-                    Road 05, Block M, Bashundhara r/a, Dhaka 1229, Bangladesh
+                    Plot:4214, Road 05, Block M, Bashundhara r/a, Dhaka 1229, Bangladesh
                   </p>
                 </div>
               </div>

@@ -53,10 +53,10 @@ export const Contact = () => {
               <p className="text-slate-600 mb-12">
                 Have a project in mind? Reach out and let's discuss how we can help you achieve your digital goals.
               </p>
-              
+
               <div className="space-y-6">
                 <div className="flex items-center gap-4">
-                  <a 
+                  <a
                     href="https://wa.me/8801612287424"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -66,9 +66,9 @@ export const Contact = () => {
                   </a>
                   <div>
                     <div className="text-xs text-slate-500 uppercase font-bold">Contact</div>
-                    <a 
-                      href="https://wa.me/8801612287424" 
-                      target="_blank" 
+                    <a
+                      href="https://wa.me/8801612287424"
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="text-slate-900 hover:text-maroon-800 transition-colors"
                     >
@@ -77,7 +77,7 @@ export const Contact = () => {
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                  <a 
+                  <a
                     href="https://maps.app.goo.gl/gtkQPvAgq2FckeGF6"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -87,18 +87,18 @@ export const Contact = () => {
                   </a>
                   <div>
                     <div className="text-xs text-slate-500 uppercase font-bold">Location</div>
-                    <a 
-                      href="https://maps.app.goo.gl/gtkQPvAgq2FckeGF6" 
-                      target="_blank" 
+                    <a
+                      href="https://maps.app.goo.gl/gtkQPvAgq2FckeGF6"
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="text-slate-900 hover:text-maroon-800 transition-colors"
                     >
-                      Road 05, Block M, Bashundhara r/a, Dhaka 1229, Bangladesh
+                      Plot:4214, Road 05, Block M, Bashundhara r/a, Dhaka 1229, Bangladesh
                     </a>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                  <a 
+                  <a
                     href="mailto:nexyrasoft@gmail.com"
                     className="w-10 h-10 rounded-full glass flex items-center justify-center bg-white hover:bg-maroon-800 group/icon transition-colors"
                   >
@@ -106,8 +106,8 @@ export const Contact = () => {
                   </a>
                   <div>
                     <div className="text-xs text-slate-500 uppercase font-bold">Email</div>
-                    <a 
-                      href="mailto:nexyrasoft@gmail.com" 
+                    <a
+                      href="mailto:nexyrasoft@gmail.com"
                       className="text-slate-900 hover:text-maroon-800 transition-colors"
                     >
                       nexyrasoft@gmail.com
@@ -119,14 +119,14 @@ export const Contact = () => {
 
             <div className="flex gap-4 mt-12">
               {[
-                { Icon: Facebook, href: "#" },
-                { Icon: Linkedin, href: "#" },
-                { Icon: Instagram, href: "#" },
+                { Icon: Facebook, href: "https://www.facebook.com/share/18ijBucTGp/" },
+                { Icon: Linkedin, href: "https://www.linkedin.com/in/nexyrasoft/" },
+                { Icon: Instagram, href: "https://www.instagram.com/nexyrasoft?igsh=M3pjOTg0Y3J0Zzlw" },
                 { Icon: MessageCircle, href: "https://wa.me/8801612287424" }
               ].map((social, i) => (
-                <a 
-                  key={i} 
-                  href={social.href} 
+                <a
+                  key={i}
+                  href={social.href}
                   target={social.href.startsWith("http") ? "_blank" : undefined}
                   rel={social.href.startsWith("http") ? "noopener noreferrer" : undefined}
                   className="w-12 h-12 rounded-full glass flex items-center justify-center hover:bg-maroon-800 transition-colors bg-white group"
