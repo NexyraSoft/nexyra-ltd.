@@ -10,7 +10,6 @@
   [![Three.js](https://img.shields.io/badge/Three.js-0.183.2-000000?logo=three.js&logoColor=white)](https://threejs.org/)
   [![Express](https://img.shields.io/badge/Express-4.21.2-000000?logo=express&logoColor=white)](https://expressjs.com/)
   [![MongoDB](https://img.shields.io/badge/MongoDB-8.13.2-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com/)
-  [![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
 </div>
 
 ---
@@ -29,7 +28,6 @@ This platform serves as both a high-conversion marketing engine (capturing leads
 - **📊 CRM-Ready Backend**: Automated lead capture system that stores submissions in MongoDB and triggers real-time email notifications via SMTP.
 - **🏢 Managed Career Portal**: Dynamic vacancy management system allowing admins to post and manage job opportunities.
 - **💬 Real-time Engagement**: Integrated chatbox and consultation booking system to drive client acquisition.
-- **🐳 DevOps Ready**: Fully containerized with Docker and Docker Compose for seamless deployment and environment consistency.
 
 ## 🛠️ Tech Stack
 
@@ -52,7 +50,6 @@ This platform serves as both a high-conversion marketing engine (capturing leads
 ### Prerequisites
 - [Node.js](https://nodejs.org/) (v18+ recommended)
 - [MongoDB](https://www.mongodb.com/try/download/community) (Local instance or Atlas URI)
-- [Docker](https://www.docker.com/) (Optional, for containerized setup)
 
 ### Local Development
 
@@ -68,52 +65,35 @@ This platform serves as both a high-conversion marketing engine (capturing leads
    ```
 
 3. **Configure Environment Variables:**
-   Create a `.env` file in the root directory based on `.env.example`:
+   Create a `.env` file in the `backend/` directory based on `.env.example`:
    ```env
    PORT=5000
    MONGODB_URI=mongodb://127.0.0.1:27017/nexyrasoft
    JWT_SECRET=your_super_secret_key
-   VITE_API_URL=http://localhost:5000/api
    # ... add SMTP settings for email functionality
    ```
 
 4. **Run the application:**
    
-   In terminal 1 (Backend):
-   ```bash
-   npm run server:dev
-   ```
-   
-   In terminal 2 (Frontend):
+   From the root directory:
    ```bash
    npm run dev
    ```
-
-### 🐳 Running with Docker
-
-Easily spin up the entire stack (Frontend + Backend + MongoDB) using Docker Compose:
-
-```bash
-docker-compose up --build
-```
-
-The app will be accessible at `http://localhost:3000`.
 
 ## 📁 Project Structure
 
 ```text
 nexyrasoft/
-├── server/               # Express Backend (TypeScript)
-│   ├── src/
-│   │   ├── controllers/  # Business logic
-│   │   ├── models/       # Mongoose schemas
-│   │   └── routes/       # API endpoints
-├── src/                  # React Frontend
-│   ├── components/       # UI Components (Sections, Layout)
-│   ├── lib/              # API helpers & utilities
-│   └── styles/           # CSS & Tailwind configuration
-├── Dockerfile            # Container definition
-└── docker-compose.yml    # Multi-container orchestration
+├── frontend/             # React application
+│   ├── src/              # UI source code
+│   ├── public/           # Static assets
+│   ├── index.html        # Entry point
+│   └── vite.config.js    # Vite configuration
+├── backend/              # Node.js Express API
+│   ├── src/              # Server source code
+│   ├── .env              # Backend secrets
+│   └── package.json      # Backend dependencies
+└── package.json          # Root workspace manager
 ```
 
 ## 📝 License
