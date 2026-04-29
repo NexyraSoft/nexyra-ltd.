@@ -15,6 +15,14 @@ const startServer = async () => {
       console.log(`✓ Allowed origins: ${env.clientUrl}`);
     });
 
+    server.on("error", (err: NodeJS.ErrnoException) => {
+      if (err.code === "EADDRINUSE") {
+        console.error(`✗ Port ${PORT} is already in use`);
+        process.exit(1);
+      }
+      throw err;
+    });
+
     // Graceful shutdown
     process.on("SIGTERM", () => {
       console.log("SIGTERM received, shutting down gracefully");
@@ -24,11 +32,9 @@ const startServer = async () => {
       });
     });
   } catch (error) {
-    console.error("Failed to start server", error);
+    console.error("Failed to start server:", error);
     process.exit(1);
   }
 };
 
 startServer();
-
-void startServer();
