@@ -24,6 +24,10 @@ app.use(
 );
 app.use(express.json());
 
+app.get("/", (req, res) => {
+  res.send("API is running 🚀");
+});
+
 // Health check endpoint for deployment monitoring
 app.get("/api/health", (_req, res) => {
   res.status(200).json({
