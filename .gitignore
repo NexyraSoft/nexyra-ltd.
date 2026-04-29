@@ -4,8 +4,8 @@ dist/
 coverage/
 .DS_Store
 *.log
-.env*
+.env
+.env.local
+.env.*.local
 !.env.example
 .planning/*
-DEPLOYMENT.md
-render.yaml

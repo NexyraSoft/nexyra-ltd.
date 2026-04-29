@@ -80,20 +80,78 @@ This platform serves as both a high-conversion marketing engine (capturing leads
    npm run dev
    ```
 
+## � Deployment
+
+This project is optimized for deployment across multiple platforms:
+
+- **Frontend**: Deployed on [Vercel](https://vercel.com)
+- **Backend**: Deployed on [Render](https://render.com)
+- **Database**: MongoDB Atlas
+
+### Quick Start Deployment
+
+1. **Backend on Render:**
+   - See [DEPLOYMENT.md](DEPLOYMENT.md#part-1-backend-deployment-on-render) for detailed instructions
+   - Key: Connect your GitHub repo, set environment variables, and deploy
+
+2. **Frontend on Vercel:**
+   - See [DEPLOYMENT.md](DEPLOYMENT.md#part-2-frontend-deployment-on-vercel) for detailed instructions
+   - Key: Set `VITE_API_URL` to your Render backend URL
+
+3. **Database on MongoDB Atlas:**
+   - See [DEPLOYMENT.md](DEPLOYMENT.md#part-3-database-configuration-mongodb-atlas) for setup
+
+For comprehensive deployment guide including troubleshooting, see [DEPLOYMENT.md](DEPLOYMENT.md).
+
 ## 📁 Project Structure
 
 ```text
 nexyrasoft/
-├── frontend/             # React application
+├── frontend/             # React application (Vite)
 │   ├── src/              # UI source code
 │   ├── public/           # Static assets
+│   ├── .env.development  # Dev environment variables
+│   ├── .env.production   # Prod environment variables
 │   ├── index.html        # Entry point
 │   └── vite.config.js    # Vite configuration
 ├── backend/              # Node.js Express API
 │   ├── src/              # Server source code
-│   ├── .env              # Backend secrets
+│   │   ├── config/       # Configuration files
+│   │   ├── controllers/  # Route controllers
+│   │   ├── models/       # MongoDB schemas
+│   │   ├── routes/       # API routes
+│   │   ├── services/     # Business logic
+│   │   └── middleware/   # Express middleware
 │   └── package.json      # Backend dependencies
+├── vercel.json           # Vercel deployment config
+├── render.yaml           # Render deployment config
+├── DEPLOYMENT.md         # Full deployment guide
 └── package.json          # Root workspace manager
+```
+
+## 🔧 Available Scripts
+
+### Root Level
+```bash
+npm run dev              # Start both frontend and backend in dev mode
+npm run build            # Build both frontend and backend
+npm run build:frontend   # Build frontend only
+npm run build:backend    # Build backend only
+npm run start            # Start backend production server
+```
+
+### Frontend
+```bash
+npm run dev -w frontend      # Start frontend dev server (port 3000)
+npm run build -w frontend    # Build for production
+npm run preview -w frontend  # Preview production build
+```
+
+### Backend
+```bash
+npm run dev -w backend       # Start backend with hot reload (port 5000)
+npm run build -w backend     # Compile TypeScript
+npm run start -w backend     # Run production server
 ```
 
 ## 📝 License

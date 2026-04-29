@@ -16,10 +16,27 @@ import { errorHandler } from "./middleware/errorHandler";
 
 export const app = express();
 
+// Determine allowed origins based on environment
+const getAllowedOrigins = () => {
+  const origins = [
+    env.clientUrl,
+    "https://nexyra-ltd-frontend.vercel.app",
+  ];
+  
+  // Allow localhost in development
+  if (env.nodeEnv === "development") {
+    origins.push("http://localhost:3000", "http://127.0.0.1:3000");
+  }
+  
+  return origins;
+};
+
 app.use(
   cors({
-    origin: [env.clientUrl, "https://nexyra-ltd-frontend.vercel.app"],
+    origin: getAllowedOrigins(),
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
 app.use(express.json());

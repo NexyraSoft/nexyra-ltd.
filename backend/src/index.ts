@@ -12,6 +12,7 @@ const startServer = async () => {
     const server = app.listen(PORT, "0.0.0.0", () => {
       console.log(`✓ Server running on port ${PORT}`);
       console.log(`✓ Environment: ${env.nodeEnv}`);
+      console.log(`✓ Allowed origins: ${env.clientUrl}`);
     });
 
     // Graceful shutdown
@@ -27,5 +28,7 @@ const startServer = async () => {
     process.exit(1);
   }
 };
+
+startServer();
 
 void startServer();
