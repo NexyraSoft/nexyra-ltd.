@@ -1,4 +1,9 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL;
+let API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+
+// Ensure it ends with /api if not present
+if (API_BASE_URL && !API_BASE_URL.endsWith("/api")) {
+  API_BASE_URL = `${API_BASE_URL.replace(/\/$/, "")}/api`;
+}
 
 type RequestOptions = {
   method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
