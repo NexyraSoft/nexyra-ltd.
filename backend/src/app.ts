@@ -24,8 +24,13 @@ app.use(
 );
 app.use(express.json());
 
+// Health check endpoint for deployment monitoring
 app.get("/api/health", (_req, res) => {
-  res.json({ message: "API is running." });
+  res.status(200).json({ 
+    status: "ok",
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
 });
 
 app.use("/api/auth", authRoutes);

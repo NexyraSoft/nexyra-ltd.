@@ -9,6 +9,7 @@ export const getTasks = async (req: Request, res: Response) => {
       .sort({ createdAt: -1 });
     res.json(tasks);
   } catch (error) {
+    console.error("Failed to fetch tasks", error);
     res.status(500).json({ message: "Failed to fetch tasks" });
   }
 };
@@ -21,6 +22,7 @@ export const getTask = async (req: Request, res: Response) => {
     if (!task) return res.status(404).json({ message: "Task not found" });
     res.json(task);
   } catch (error) {
+    console.error("Failed to fetch task", error);
     res.status(500).json({ message: "Failed to fetch task" });
   }
 };
@@ -33,6 +35,7 @@ export const createTask = async (req: Request, res: Response) => {
       .populate("relatedProject", "title");
     res.status(201).json(populatedTask);
   } catch (error) {
+    console.error("Failed to create task", error);
     res.status(500).json({ message: "Failed to create task" });
   }
 };
@@ -50,6 +53,7 @@ export const updateTask = async (req: Request, res: Response) => {
     if (!updatedTask) return res.status(404).json({ message: "Task not found" });
     res.json(updatedTask);
   } catch (error) {
+    console.error("Failed to update task", error);
     res.status(500).json({ message: "Failed to update task" });
   }
 };
@@ -60,6 +64,7 @@ export const deleteTask = async (req: Request, res: Response) => {
     if (!deletedTask) return res.status(404).json({ message: "Task not found" });
     res.json({ message: "Task deleted successfully" });
   } catch (error) {
+    console.error("Failed to delete task", error);
     res.status(500).json({ message: "Failed to delete task" });
   }
 };

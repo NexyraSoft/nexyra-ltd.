@@ -6,6 +6,7 @@ export const getProjects = async (req: Request, res: Response) => {
     const projects = await Project.find().populate("client", "name company email").sort({ createdAt: -1 });
     res.json(projects);
   } catch (error) {
+    console.error("Failed to fetch projects", error);
     res.status(500).json({ message: "Failed to fetch projects" });
   }
 };
@@ -16,6 +17,7 @@ export const getProject = async (req: Request, res: Response) => {
     if (!project) return res.status(404).json({ message: "Project not found" });
     res.json(project);
   } catch (error) {
+    console.error("Failed to fetch project", error);
     res.status(500).json({ message: "Failed to fetch project" });
   }
 };
@@ -35,6 +37,7 @@ export const createProject = async (req: Request, res: Response) => {
     const populatedProject = await Project.findById(newProject._id).populate("client", "name company email");
     res.status(201).json(populatedProject);
   } catch (error) {
+    console.error("Failed to create project", error);
     res.status(500).json({ message: "Failed to create project" });
   }
 };
@@ -50,6 +53,7 @@ export const updateProject = async (req: Request, res: Response) => {
     if (!updatedProject) return res.status(404).json({ message: "Project not found" });
     res.json(updatedProject);
   } catch (error) {
+    console.error("Failed to update project", error);
     res.status(500).json({ message: "Failed to update project" });
   }
 };
@@ -60,6 +64,7 @@ export const deleteProject = async (req: Request, res: Response) => {
     if (!deletedProject) return res.status(404).json({ message: "Project not found" });
     res.json({ message: "Project deleted successfully" });
   } catch (error) {
+    console.error("Failed to delete project", error);
     res.status(500).json({ message: "Failed to delete project" });
   }
 };

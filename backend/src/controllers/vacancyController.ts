@@ -38,6 +38,7 @@ export const getPublicCareers = async (_req: Request, res: Response) => {
     const vacancies = await JobVacancy.find({ status: "Active" }).sort({ createdAt: -1 });
     res.json(vacancies);
   } catch (error) {
+    console.error("Failed to fetch careers", error);
     handleVacancyError(res, error, "Failed to fetch careers");
   }
 };

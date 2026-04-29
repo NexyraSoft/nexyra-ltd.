@@ -6,6 +6,7 @@ export const getClients = async (req: Request, res: Response) => {
     const clients = await Client.find().sort({ createdAt: -1 });
     res.json(clients);
   } catch (error) {
+    console.error("Failed to fetch clients", error);
     res.status(500).json({ message: "Failed to fetch clients" });
   }
 };
@@ -16,6 +17,7 @@ export const getClient = async (req: Request, res: Response) => {
     if (!client) return res.status(404).json({ message: "Client not found" });
     res.json(client);
   } catch (error) {
+    console.error("Failed to fetch client", error);
     res.status(500).json({ message: "Failed to fetch client" });
   }
 };
@@ -35,6 +37,7 @@ export const createClient = async (req: Request, res: Response) => {
     
     res.status(201).json(newClient);
   } catch (error) {
+    console.error("Failed to create client", error);
     res.status(500).json({ message: "Failed to create client" });
   }
 };
@@ -49,6 +52,7 @@ export const updateClient = async (req: Request, res: Response) => {
     if (!updatedClient) return res.status(404).json({ message: "Client not found" });
     res.json(updatedClient);
   } catch (error) {
+    console.error("Failed to update client", error);
     res.status(500).json({ message: "Failed to update client" });
   }
 };
@@ -59,6 +63,7 @@ export const deleteClient = async (req: Request, res: Response) => {
     if (!deletedClient) return res.status(404).json({ message: "Client not found" });
     res.json({ message: "Client deleted successfully" });
   } catch (error) {
+    console.error("Failed to delete client", error);
     res.status(500).json({ message: "Failed to delete client" });
   }
 };
