@@ -35,7 +35,7 @@ declare global {
         id: string;
         email: string;
         name: string;
-        role: UserRole;
+        role?: UserRole;
       };
     }
   }
@@ -73,7 +73,7 @@ export const requireAdmin = (req: Request, res: Response, next: NextFunction) =>
 };
 
 export const requireRole = (...roles: UserRole[]) => (req: Request, res: Response, next: NextFunction) => {
-  if (!req.user || !roles.includes(req.user.role)) {
+  if (!req.user || !req.user.role || !(roles as UserRole[]).includes(req.user.role)) {
     return res.status(403).json({ message: "Access denied." });
   }
 
