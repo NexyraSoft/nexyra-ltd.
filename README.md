@@ -154,6 +154,23 @@ npm run build -w backend     # Compile TypeScript
 npm run start -w backend     # Run production server
 ```
 
+## ⚡ Build Optimization
+
+The frontend is optimized for fast loading and minimal bundle size:
+
+- **Code Splitting**: Heavy dependencies (Three.js, React Three Fiber) are split into separate chunks
+- **Lazy Loading**: Routes and components load on-demand to reduce initial bundle size
+- **Minification**: Terser compression removes unused code and console logs
+- **Manual Chunking**: Vendor, UI, and feature-specific chunks for optimal caching
+
+### View Bundle Size Analysis
+```bash
+npm install -D vite-plugin-visualizer
+# Then add to vite.config.js and run build to see breakdown
+```
+
+For detailed optimization information, see [frontend/BUILD_OPTIMIZATION.md](frontend/BUILD_OPTIMIZATION.md)
+
 ## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useEffect, useRef, useState } from "react";
+import { Suspense, lazy, useEffect, useRef, useState } from "react";
 import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
 import { Footer } from "./components/layout/Footer";
 import { Navbar } from "./components/layout/Navbar";
@@ -13,17 +13,19 @@ import { Contact } from "./components/sections/Contact";
 import { Hero } from "./components/sections/Hero";
 import { Privacy } from "./components/sections/Privacy";
 import { Process } from "./components/sections/Process";
-import { ServiceDetail } from "./components/sections/ServiceDetail";
 import { Services } from "./components/sections/Services";
 import { Terms } from "./components/sections/Terms";
-import { Tools } from "./components/sections/Tools";
 import Background3D from "./components/ui/Background3D";
 import { Chatbot } from "./components/ui/Chatbot";
 import { GetStartedModal } from "./components/ui/GetStartedModal";
 import { Preloader } from "./components/ui/Preloader";
-import AdminDashboard from "./pages/admin/AdminDashboard";
-import AdminLogin from "./pages/admin/AdminLogin";
 import { ProtectedRoute } from "./components/layout/ProtectedRoute";
+
+// Lazy load heavy components
+const ServiceDetail = lazy(() => import("./components/sections/ServiceDetail"));
+const Tools = lazy(() => import("./components/sections/Tools"));
+const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
+const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
 
 const ScrollToTop = () => {
   const location = useLocation();
@@ -39,11 +41,22 @@ const ScrollToTop = () => {
   return null;
 };
 
+const LoadingFallback = () => (
+  <div className="min-h-screen flex items-center justify-center">
+    <div className="text-center">
+      <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-maroon-900"></div>
+      <p className="mt-4 text-gray-600">Loading...</p>
+    </div>
+  </div>
+);
+
 const Home = ({ onGetStartedClick }: { onGetStartedClick: () => void }) => (
   <>
     <Hero onGetStartedClick={onGetStartedClick} />
     <Services />
-    <Tools />
+    <Suspense fallback={<div className="h-96 bg-gray-100 animate-pulse" />}>
+      <Tools />
+    </Suspense>
     <About />
     <Process />
     <Contact />
@@ -63,12 +76,35 @@ export default function App() {
         <main className="relative z-10">
           <Routes>
             <Route path="/" element={<Home onGetStartedClick={() => setIsGetStartedModalOpen(true)} />} />
-            <Route path="/services/:slug" element={<ServiceDetail />} />
+            <Route 
+              path="/services/:slug" 
+              element={
+                <Suspense fallback={<LoadingFallback />}>
+                  <ServiceDetail />
+                </Suspense>
+              } 
+            />
             <Route path="/careers" element={<Careers />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/privacy" element={<Privacy />} />
-            <Route path="/admin/login" element={<AdminLogin />} />
-            <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+            <Route 
+              path="/admin/login" 
+              element={
+                <Suspense fallback={<LoadingFallback />}>
+                  <AdminLogin />
+                </Suspense>
+              } 
+            />
+            <Route 
+              path="/admin" 
+              element={
+                <ProtectedRoute>
+                  <Suspense fallback={<LoadingFallback />}>
+                    <AdminDashboard />
+                  </Suspense>
+                </ProtectedRoute>
+              } 
+            />
           </Routes>
         </main>
         <GetStartedModal isOpen={isGetStartedModalOpen} onClose={() => setIsGetStartedModalOpen(false)} />
