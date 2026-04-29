@@ -18,7 +18,7 @@ export const app = express();
 
 app.use(
   cors({
-    origin: "https://nexyra-ltd-frontend.vercel.app",
+    origin: [env.clientUrl, "https://nexyra-ltd-frontend.vercel.app"],
     credentials: true,
   }),
 );

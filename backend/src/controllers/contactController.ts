@@ -73,11 +73,11 @@ export const submitContact = async (req: Request, res: Response) => {
         phone: normalizedPhone,
         message: normalizedMessage,
       });
-    } catch (error) {
-      console.error("Contact email delivery failed", error);
-
-      return res.status(500).json({
-        message: "Your message was saved, but the email notification could not be sent.",
+    } catch (emailError) {
+      console.error("CRITICAL: Contact email delivery failed", emailError);
+      // We still return 201 because the message IS saved in the DB
+      return res.status(201).json({
+        message: "Message received! (Note: Email notification failed, but admin can see it in dashboard)",
         contact,
       });
     }
@@ -87,8 +87,10 @@ export const submitContact = async (req: Request, res: Response) => {
       contact,
     });
   } catch (error) {
-    console.error("Failed to submit contact", error);
-    return res.status(500).json({ message: "Failed to submit contact message" });
+    console.error("DATABASE ERROR: Failed to submit contact", error);
+    return res.status(500).json({ 
+      message: "Server Error: Could not save your message. Please check your database connection." 
+    });
   }
 };
 
