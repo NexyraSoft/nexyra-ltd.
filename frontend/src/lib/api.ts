@@ -1,9 +1,14 @@
+import { authService } from "./auth";
+
 let API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
 // Ensure it ends with /api if not present
 if (API_BASE_URL && !API_BASE_URL.endsWith("/api")) {
   API_BASE_URL = `${API_BASE_URL.replace(/\/$/, "")}/api`;
 }
+
+// Log API URL for debugging
+console.log("API_BASE_URL:", API_BASE_URL);
 
 type RequestOptions = {
   method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
@@ -12,20 +17,36 @@ type RequestOptions = {
 };
 
 export async function apiRequest<T>(path: string, options: RequestOptions = {}) {
-  const response = await fetch(`${API_BASE_URL}${path}`, {
+  // Get token from storage if not provided in options
+  const token = options.token || authService.getToken();
+  
+  const url = `${API_BASE_URL}${path}`;
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+
+  // Add authorization header if token exists
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
+  console.debug(`[API] ${options.method || "GET"} ${url}`);
+  if (token) {
+    console.debug(`[API] Token present: ${token.substring(0, 20)}...`);
+  }
+
+  const response = await fetch(url, {
     method: options.method ?? "GET",
     credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-      ...(options.token ? { Authorization: `Bearer ${options.token}` } : {}),
-    },
+    headers,
     body: options.body ? JSON.stringify(options.body) : undefined,
   });
 
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
-    throw new Error(data.message ?? "Request failed.");
+    console.error(`[API] Error ${response.status}:`, data.message || "Request failed");
+    throw new Error(data.message ?? `Request failed with status ${response.status}`);
   }
 
   return data as T;
