@@ -18,7 +18,7 @@ export const app = express();
 
 app.use(
   cors({
-    origin: true,
+    origin: "https://nexyra-ltd-frontend.vercel.app",
     credentials: true,
   }),
 );
@@ -26,7 +26,7 @@ app.use(express.json());
 
 // Health check endpoint for deployment monitoring
 app.get("/api/health", (_req, res) => {
-  res.status(200).json({ 
+  res.status(200).json({
     status: "ok",
     timestamp: new Date().toISOString(),
     uptime: process.uptime()
