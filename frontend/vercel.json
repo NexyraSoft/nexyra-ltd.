@@ -3,8 +3,8 @@
   "devCommand": "npm run dev -w frontend",
   "installCommand": "npm ci",
   "framework": "vite",
-  "outputDirectory": "frontend/dist",
-  "rootDirectory": ".",
+  "outputDirectory": "dist",
+  "rootDirectory": "frontend",
   "env": {
     "VITE_API_URL": {
       "description": "Backend API URL for production",
