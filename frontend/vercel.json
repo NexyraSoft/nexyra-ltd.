@@ -1,32 +1,8 @@
 {
-  "buildCommand": "npm run build:frontend",
-  "devCommand": "npm run dev -w frontend",
-  "installCommand": "npm ci",
-  "framework": "vite",
-  "outputDirectory": "dist",
-  "rootDirectory": "frontend",
-  "env": {
-    "VITE_API_URL": {
-      "description": "Backend API URL for production",
-      "default": "https://nexyrasoft-backend.onrender.com/api"
-    }
-  },
-  "envPrefix": "VITE_",
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/index.html"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/api/:path*",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-store, max-age=0"
-        }
-      ]
+      "destination": "/"
     }
   ]
 }
