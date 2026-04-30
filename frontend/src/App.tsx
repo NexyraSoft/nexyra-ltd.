@@ -20,6 +20,7 @@ import { Chatbot } from "./components/ui/Chatbot";
 import { GetStartedModal } from "./components/ui/GetStartedModal";
 import { Preloader } from "./components/ui/Preloader";
 import { ProtectedRoute } from "./components/layout/ProtectedRoute";
+import { PublicRoute } from "./components/layout/PublicRoute";
 
 // Lazy load heavy components
 const ServiceDetail = lazy(() => import("./components/sections/ServiceDetail"));
@@ -63,54 +64,72 @@ const Home = ({ onGetStartedClick }: { onGetStartedClick: () => void }) => (
   </>
 );
 
-export default function App() {
+const AppContent = () => {
   const [isGetStartedModalOpen, setIsGetStartedModalOpen] = useState(false);
+  const location = useLocation();
+  const isAdminPath = location.pathname.startsWith("/admin");
 
   return (
-    <Router>
-      <ScrollToTop />
-      <div className="font-sans relative min-h-screen selection:bg-maroon-900 selection:text-white">
-        <Preloader />
-        <Background3D />
-        <Navbar onGetStartedClick={() => setIsGetStartedModalOpen(true)} />
-        <main className="relative z-10">
-          <Routes>
-            <Route path="/" element={<Home onGetStartedClick={() => setIsGetStartedModalOpen(true)} />} />
-            <Route 
-              path="/services/:slug" 
-              element={
-                <Suspense fallback={<LoadingFallback />}>
-                  <ServiceDetail />
-                </Suspense>
-              } 
-            />
-            <Route path="/careers" element={<Careers />} />
-            <Route path="/terms" element={<Terms />} />
-            <Route path="/privacy" element={<Privacy />} />
-            <Route 
-              path="/admin/login" 
-              element={
+    <div className="font-sans relative min-h-screen selection:bg-maroon-900 selection:text-white">
+      {!isAdminPath && (
+        <>
+          <Preloader />
+          <Background3D />
+          <Navbar onGetStartedClick={() => setIsGetStartedModalOpen(true)} />
+        </>
+      )}
+      <main className={!isAdminPath ? "relative z-10" : ""}>
+        <Routes>
+          <Route path="/" element={<Home onGetStartedClick={() => setIsGetStartedModalOpen(true)} />} />
+          <Route 
+            path="/services/:slug" 
+            element={
+              <Suspense fallback={<LoadingFallback />}>
+                <ServiceDetail />
+              </Suspense>
+            } 
+          />
+          <Route path="/careers" element={<Careers />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route 
+            path="/admin/login" 
+            element={
+              <PublicRoute>
                 <Suspense fallback={<LoadingFallback />}>
                   <AdminLogin />
                 </Suspense>
-              } 
-            />
-            <Route 
-              path="/admin" 
-              element={
-                <ProtectedRoute>
-                  <Suspense fallback={<LoadingFallback />}>
-                    <AdminDashboard />
-                  </Suspense>
-                </ProtectedRoute>
-              } 
-            />
-          </Routes>
-        </main>
-        <GetStartedModal isOpen={isGetStartedModalOpen} onClose={() => setIsGetStartedModalOpen(false)} />
-        <Footer />
-        <Chatbot />
-      </div>
+              </PublicRoute>
+            } 
+          />
+          <Route 
+            path="/admin" 
+            element={
+              <ProtectedRoute>
+                <Suspense fallback={<LoadingFallback />}>
+                  <AdminDashboard />
+                </Suspense>
+              </ProtectedRoute>
+            } 
+          />
+        </Routes>
+      </main>
+      {!isAdminPath && (
+        <>
+          <GetStartedModal isOpen={isGetStartedModalOpen} onClose={() => setIsGetStartedModalOpen(false)} />
+          <Footer />
+          <Chatbot />
+        </>
+      )}
+    </div>
+  );
+};
+
+export default function App() {
+  return (
+    <Router>
+      <ScrollToTop />
+      <AppContent />
     </Router>
   );
 }

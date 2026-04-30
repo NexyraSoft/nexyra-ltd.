@@ -45,6 +45,13 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}) 
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
+    if (response.status === 401) {
+      console.warn("[API] 401 Unauthorized. Clearing token and redirecting to login.");
+      authService.clearToken();
+      if (!window.location.pathname.startsWith("/admin/login")) {
+        window.location.href = "/admin/login";
+      }
+    }
     console.error(`[API] Error ${response.status}:`, data.message || "Request failed");
     throw new Error(data.message ?? `Request failed with status ${response.status}`);
   }
