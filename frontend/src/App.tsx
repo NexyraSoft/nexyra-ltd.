@@ -23,8 +23,8 @@ import { ProtectedRoute } from "./components/layout/ProtectedRoute";
 import { PublicRoute } from "./components/layout/PublicRoute";
 
 // Lazy load heavy components
-const ServiceDetail = lazy(() => import("./components/sections/ServiceDetail"));
-const Tools = lazy(() => import("./components/sections/Tools"));
+const ServiceDetail = lazy(() => import("./components/sections/ServiceDetail").then(module => ({ default: module.ServiceDetail })));
+const Tools = lazy(() => import("./components/sections/Tools").then(module => ({ default: module.Tools })));
 const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
 
