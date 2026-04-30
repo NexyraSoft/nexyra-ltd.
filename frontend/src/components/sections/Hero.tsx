@@ -491,7 +491,7 @@ const SoftwareIconCore = () => {
             transparent
             opacity={0.05}
             side={THREE.DoubleSide}
-            map={new THREE.TextureLoader().load('https://raw.githubusercontent.com/pmndrs/drei-assets/main/light-halo.png')}
+            map={new THREE.TextureLoader().load('/light-halo.png')}
           />
         </mesh>
 
