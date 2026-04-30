@@ -2,7 +2,7 @@ import { app } from "./app";
 import { connectDatabase } from "./config/db";
 import { env } from "./config/env";
 
-const PORT = process.env.PORT || 5000;
+const PORT = Number(process.env.PORT) || 5000;
 
 const startServer = async () => {
   try {
