@@ -1,11 +1,7 @@
 # Vercel Deployment - Files to Ignore
 
-# Source files (already compiled)
-**/*.ts
-**/*.tsx
-**/*.jsx
-tsconfig.json
-vite.config.js
+# Source files (needed for Vite build)
+# (removed exclusions that were blocking .ts and .tsx files)
 
 # Development
 .env.development
