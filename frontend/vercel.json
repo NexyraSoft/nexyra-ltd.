@@ -1,17 +1,10 @@
 {
-  "buildCommand": "npm run build:frontend",
-  "devCommand": "npm run dev -w frontend",
-  "installCommand": "npm ci",
+  "buildCommand": "npm run build",
   "framework": "vite",
-  "outputDirectory": "frontend/dist",
-  "rootDirectory": ".",
+  "outputDirectory": "dist",
   "env": {
-    "VITE_API_URL": {
-      "description": "Backend API URL for production",
-      "default": "https://nexyrasoft-backend.onrender.com/api"
-    }
+    "VITE_API_URL": "https://nexyrasoft-backend.onrender.com/api"
   },
-  "envPrefix": "VITE_",
   "rewrites": [
     {
       "source": "/(.*)",
