@@ -8,8 +8,10 @@ import {
 } from "../services/emailService";
 
 const isEmail = (value: string) => /\S+@\S+\.\S+/.test(value);
-const isValidName = (value: string) => /^[A-Za-z][A-Za-z .'\\-]{1,49}$/.test(value);
-const isValidPhone = (value: string) => /^(?:\+[1-9]\d{7,14}|\d{7,15})$/.test(value);
+const NAME_REGEX = /^[A-Za-z][A-Za-z .'-]{1,49}$/;
+const PHONE_REGEX = /^(?:\+[1-9]\d{7,14}|\d{7,15})$/;
+const isValidName = (value: string) => NAME_REGEX.test(value);
+const isValidPhone = (value: string) => PHONE_REGEX.test(value);
 const hasValidMessageLength = (value: string) => value.trim().length >= 10 && value.trim().length <= 1000;
 
 export const getContacts = async (_req: Request, res: Response) => {
