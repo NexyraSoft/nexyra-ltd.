@@ -10,6 +10,10 @@ const getTransporter = () => {
     host: env.smtpHost,
     port: env.smtpPort,
     secure: env.smtpSecure,
+    // timeouts to avoid hanging connections
+    connectionTimeout: 15000,
+    greetingTimeout: 5000,
+    socketTimeout: 15000,
     auth: {
       user: env.smtpUser,
       pass: env.smtpPass,
@@ -40,16 +44,25 @@ type ServiceRequestEmailPayload = {
   message: string;
 };
 
-const sendEmailWithRetry = async (transporter: any, mailOptions: any, retries = 2) => {
+const sendEmailWithRetry = async (transporter: any, mailOptions: any, retries = 2, perAttemptTimeoutMs = 15000) => {
+  const sendWithTimeout = (opts: any) => {
+    return Promise.race([
+      transporter.sendMail(opts),
+      new Promise((_, reject) => setTimeout(() => reject(new Error("Email send timeout")), perAttemptTimeoutMs)),
+    ]);
+  };
+
   for (let i = 0; i < retries; i++) {
     try {
-      const result = await transporter.sendMail(mailOptions);
+      const result = await sendWithTimeout(mailOptions);
       console.log(`✓ Email sent successfully to ${mailOptions.to}`);
       return result;
     } catch (error) {
-      console.error(`Email attempt ${i + 1} failed for ${mailOptions.to}:`, error);
+      console.error(`Email attempt ${i + 1} failed for ${mailOptions.to}:`, error instanceof Error ? error.message : error);
       if (i === retries - 1) throw error;
-      await new Promise((r) => setTimeout(r, 1000 * (i + 1)));
+      // exponential backoff with jitter
+      const backoff = Math.min(5000 * (i + 1), 20000);
+      await new Promise((r) => setTimeout(r, backoff + Math.floor(Math.random() * 1000)));
     }
   }
 };
