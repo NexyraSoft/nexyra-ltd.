@@ -68,24 +68,18 @@ export const submitContact = async (req: Request, res: Response) => {
       message: normalizedMessage,
     });
 
-    try {
-      await sendContactEmails({
-        name: normalizedName,
-        email: normalizedEmail,
-        phone: normalizedPhone,
-        message: normalizedMessage,
-      });
-    } catch (emailError) {
-      console.error("CRITICAL: Contact email delivery failed", emailError);
-      // We still return 201 because the message IS saved in the DB
-      return res.status(201).json({
-        message: "Message received! (Note: Email notification failed, but admin can see it in dashboard)",
-        contact,
-      });
-    }
+    // Send emails asynchronously so the API returns immediately
+    sendContactEmails({
+      name: normalizedName,
+      email: normalizedEmail,
+      phone: normalizedPhone,
+      message: normalizedMessage,
+    })
+      .then(() => console.log("Contact emails sent (async)"))
+      .catch((emailError) => console.error("CRITICAL: Contact email delivery failed (async)", emailError));
 
     return res.status(201).json({
-      message: "Your message has been sent successfully.",
+      message: "Your message has been received. We'll reach out within 24 hours.",
       contact,
     });
   } catch (error) {
@@ -143,21 +137,15 @@ export const submitGetStartedLead = async (req: Request, res: Response) => {
       acceptedTerms,
     });
 
-    try {
-      await sendGetStartedEmails({
-        name: normalizedName,
-        email: normalizedEmail,
-        phone: normalizedPhone,
-        message: normalizedMessage,
-      });
-    } catch (error) {
-      console.error("Get Started email delivery failed", error);
-
-      return res.status(500).json({
-        message: "Your request was saved, but the email notification could not be sent.",
-        lead,
-      });
-    }
+    // Send emails asynchronously
+    sendGetStartedEmails({
+      name: normalizedName,
+      email: normalizedEmail,
+      phone: normalizedPhone,
+      message: normalizedMessage,
+    })
+      .then(() => console.log("Get-started emails sent (async)"))
+      .catch((err) => console.error("Get Started email delivery failed (async)", err));
 
     return res.status(201).json({
       message: "Your project request has been submitted.",
@@ -229,23 +217,17 @@ export const submitServiceRequest = async (req: Request, res: Response) => {
       acceptedTerms,
     });
 
-    try {
-      await sendServiceRequestEmails({
-        name: normalizedName,
-        email: normalizedEmail,
-        phone: normalizedPhone,
-        budget: normalizedBudget,
-        serviceName: normalizedServiceName,
-        message: normalizedMessage,
-      });
-    } catch (error) {
-      console.error("Service request email delivery failed", error);
-
-      return res.status(500).json({
-        message: "Your request was saved, but the email notification could not be sent.",
-        lead,
-      });
-    }
+    // Send emails asynchronously
+    sendServiceRequestEmails({
+      name: normalizedName,
+      email: normalizedEmail,
+      phone: normalizedPhone,
+      budget: normalizedBudget,
+      serviceName: normalizedServiceName,
+      message: normalizedMessage,
+    })
+      .then(() => console.log("Service request emails sent (async)"))
+      .catch((err) => console.error("Service request email delivery failed (async)", err));
 
     return res.status(201).json({
       message: "Your service request has been submitted.",
