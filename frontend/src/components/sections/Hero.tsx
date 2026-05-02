@@ -484,16 +484,7 @@ const SoftwareIconCore = () => {
           />
         </mesh>
 
-        <mesh position={[0, -5, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <planeGeometry args={[12, 12]} />
-          <meshBasicMaterial
-            color="#7a1a2a"
-            transparent
-            opacity={0.05}
-            side={THREE.DoubleSide}
-            map={new THREE.TextureLoader().load('/light-halo.png')}
-          />
-        </mesh>
+        {/* Plane base removed to eliminate square under services orbit */}
 
         {/* SECONDARY GLOWING SHELL */}
         <mesh>
