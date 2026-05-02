@@ -776,7 +776,6 @@ const ScienceScene = ({ onServiceClick }: { onServiceClick: (slug: string) => vo
 
             <SoftwareIconCore />
             <ServicesOrbit onServiceClick={onServiceClick} isVisible={mounted} />
-            <HudBase />
             <ParticleCloud />
 
             <OrbitControls
