@@ -1,24 +1,63 @@
 import nodemailer from "nodemailer";
 import { env } from "../config/env";
 
-const getTransporter = () => {
-  if (!env.smtpUser || !env.smtpPass) {
-    throw new Error("SMTP credentials are missing. Set SMTP_USER and SMTP_PASS in environment variables.");
+let cachedTransporter: any = null;
+
+const createTransporter = () => {
+  if (!env.smtpHost || !env.smtpPort || !env.smtpUser || !env.smtpPass) {
+    throw new Error(
+      "SMTP configuration incomplete. Set SMTP_HOST, SMTP_PORT, SMTP_USER and SMTP_PASS in environment."
+    );
   }
 
-  return nodemailer.createTransport({
+  // Prefer direct SMTPS on port 465; otherwise use STARTTLS (requireTLS)
+  const isSecure = env.smtpPort === 465 || env.smtpSecure === true;
+
+  const transportOptions: any = {
     host: env.smtpHost,
     port: env.smtpPort,
-    secure: env.smtpSecure,
-    // timeouts to avoid hanging connections
-    connectionTimeout: 15000,
-    greetingTimeout: 5000,
-    socketTimeout: 15000,
+    secure: isSecure,
     auth: {
       user: env.smtpUser,
       pass: env.smtpPass,
     },
-  });
+    // timeouts to avoid hanging connections
+    connectionTimeout: 15000,
+    greetingTimeout: 5000,
+    socketTimeout: 15000,
+  };
+
+  // Enforce STARTTLS when not connecting over SMTPS
+  if (!isSecure) transportOptions.requireTLS = true;
+
+  // In non-production environments, relax TLS verification to help with self-signed certs
+  if (env.nodeEnv !== "production") {
+    transportOptions.tls = Object.assign({}, transportOptions.tls, { rejectUnauthorized: false });
+  }
+
+  const transporter = nodemailer.createTransport(transportOptions);
+
+  // Verify transporter early so failures are visible in logs
+  transporter
+    .verify()
+    .then(() => console.log("SMTP transporter verified"))
+    .catch((err: any) => console.error("Failed to verify SMTP transporter:", err instanceof Error ? err.message : err));
+
+  return transporter;
+};
+
+const getTransporter = () => {
+  if (!cachedTransporter) cachedTransporter = createTransporter();
+  return cachedTransporter;
+};
+
+const closeCachedTransporter = (transporter: any) => {
+  try {
+    if (transporter && typeof transporter.close === "function") transporter.close();
+  } catch (err) {
+    console.warn("Error closing transporter:", err);
+  }
+  cachedTransporter = null;
 };
 
 type ContactEmailPayload = {
@@ -44,7 +83,12 @@ type ServiceRequestEmailPayload = {
   message: string;
 };
 
-const sendEmailWithRetry = async (transporter: any, mailOptions: any, retries = 2, perAttemptTimeoutMs = 15000) => {
+const sendEmailWithRetry = async (
+  transporter: any,
+  mailOptions: any,
+  retries = 2,
+  perAttemptTimeoutMs = 15000
+) => {
   const sendWithTimeout = (opts: any) => {
     return Promise.race([
       transporter.sendMail(opts),
@@ -52,17 +96,29 @@ const sendEmailWithRetry = async (transporter: any, mailOptions: any, retries = 
     ]);
   };
 
-  for (let i = 0; i < retries; i++) {
+  for (let attempt = 0; attempt < retries; attempt++) {
     try {
       const result = await sendWithTimeout(mailOptions);
       console.log(`✓ Email sent successfully to ${mailOptions.to}`);
       return result;
-    } catch (error) {
-      console.error(`Email attempt ${i + 1} failed for ${mailOptions.to}:`, error instanceof Error ? error.message : error);
-      if (i === retries - 1) throw error;
+    } catch (error: any) {
+      const msg = error instanceof Error ? error.message : String(error);
+      console.error(`Email attempt ${attempt + 1} failed for ${mailOptions.to}:`, msg);
+
+      // For connection/auth/timeouts, reset cached transporter so next attempt recreates connection
+      if (/timeout|ECONNRESET|ETIMEDOUT|ENOTFOUND|Authorization/i.test(msg)) {
+        try {
+          closeCachedTransporter(transporter);
+        } catch (_err) {
+          /* ignore */
+        }
+      }
+
+      if (attempt === retries - 1) throw error;
+
       // exponential backoff with jitter
-      const backoff = Math.min(5000 * (i + 1), 20000);
-      await new Promise((r) => setTimeout(r, backoff + Math.floor(Math.random() * 1000)));
+      const backoff = Math.min(1000 * Math.pow(2, attempt), 20000);
+      await new Promise((r) => setTimeout(r, backoff + Math.floor(Math.random() * 500)));
     }
   }
 };
@@ -70,7 +126,11 @@ const sendEmailWithRetry = async (transporter: any, mailOptions: any, retries = 
 export const sendContactEmails = async (payload: ContactEmailPayload) => {
   try {
     const transporter = getTransporter();
-    const from = `"${env.smtpFromName}" <${env.smtpUser}>`;
+    const from = env.smtpFromName ? `"${env.smtpFromName}" <${env.smtpUser}>` : env.smtpUser;
+
+    if (!env.companyNotificationEmail) {
+      throw new Error("COMPANY_NOTIFICATION_EMAIL is not configured");
+    }
 
     await Promise.all([
       sendEmailWithRetry(transporter, {
@@ -114,7 +174,11 @@ export const sendContactEmails = async (payload: ContactEmailPayload) => {
 export const sendGetStartedEmails = async (payload: GetStartedEmailPayload) => {
   try {
     const transporter = getTransporter();
-    const from = `"${env.smtpFromName}" <${env.smtpUser}>`;
+    const from = env.smtpFromName ? `"${env.smtpFromName}" <${env.smtpUser}>` : env.smtpUser;
+
+    if (!env.companyNotificationEmail) {
+      throw new Error("COMPANY_NOTIFICATION_EMAIL is not configured");
+    }
 
     await Promise.all([
       sendEmailWithRetry(transporter, {
@@ -156,7 +220,11 @@ export const sendGetStartedEmails = async (payload: GetStartedEmailPayload) => {
 export const sendServiceRequestEmails = async (payload: ServiceRequestEmailPayload) => {
   try {
     const transporter = getTransporter();
-    const from = `"${env.smtpFromName}" <${env.smtpUser}>`;
+    const from = env.smtpFromName ? `"${env.smtpFromName}" <${env.smtpUser}>` : env.smtpUser;
+
+    if (!env.companyNotificationEmail) {
+      throw new Error("COMPANY_NOTIFICATION_EMAIL is not configured");
+    }
 
     await Promise.all([
       sendEmailWithRetry(transporter, {
