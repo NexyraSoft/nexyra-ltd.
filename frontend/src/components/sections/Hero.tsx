@@ -33,6 +33,7 @@ import {
 } from "@react-three/drei";
 import * as THREE from "three";
 import { Logo } from "../ui/Logo";
+import { useIsMobile } from "../../lib/useIsMobile";
 import { SERVICES } from "../../constants/siteData";
 
 interface HeroProps {
@@ -708,6 +709,8 @@ const ScienceScene = ({ onServiceClick }: { onServiceClick: (slug: string) => vo
 export const Hero = ({ onGetStartedClick }: HeroProps) => {
   const [selectedService, setSelectedService] = React.useState<string | null>(null);
 
+  const isMobile = useIsMobile(640);
+
   const serviceDetails = useMemo(() => {
     if (!selectedService) return null;
     return SERVICES.find(s => s.slug === selectedService);
@@ -819,10 +822,30 @@ export const Hero = ({ onGetStartedClick }: HeroProps) => {
             transition={{ duration: 1, delay: 0.3 }}
             className="relative h-[450px] sm:h-[600px] md:h-[700px] lg:h-[750px] xl:h-[850px] w-full order-2 lg:order-2 lg:mt-0"
           >
-            <div className="relative w-full h-full flex items-center justify-center -mx-4 sm:mx-0">
-              {/* Decorative Glow removed for full white appearance */}
-              <ScienceScene onServiceClick={(slug) => setSelectedService(slug)} />
-            </div>
+              <div className="relative w-full h-full flex items-center justify-center -mx-4 sm:mx-0">
+                {/* Decorative Glow removed for full white appearance */}
+                {isMobile ? (
+                  <div className="w-full h-full flex items-center justify-center p-6">
+                    <div className="max-w-md text-center">
+                      <div className="mb-4 flex items-center justify-center">
+                        <Logo className="w-28 h-28 text-maroon-800" />
+                      </div>
+                      <h3 className="text-lg font-bold text-maroon-900 mb-2">NexyraSoft Services</h3>
+                      <p className="text-sm text-slate-600 mb-4">Custom software, web &amp; mobile, AI, cloud and more.</p>
+                      <div className="grid grid-cols-2 gap-2 text-left">
+                        {SPECIALTIES.slice(0, 6).map((s) => (
+                          <div key={s.name} className="flex items-center gap-3 p-2 bg-white/50 rounded-lg shadow-sm">
+                            <s.icon className="w-4 h-4 text-maroon-800" />
+                            <span className="text-xs text-slate-700">{s.name}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <ScienceScene onServiceClick={(slug) => setSelectedService(slug)} />
+                )}
+              </div>
           </motion.div>
         </div>
 
