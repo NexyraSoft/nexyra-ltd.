@@ -25,36 +25,48 @@ export default defineConfig(() => {
       },
       rollupOptions: {
         output: {
-          manualChunks: {
-            // Vendor chunks
-            'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-            'three-vendor': ['three', '@react-three/fiber', '@react-three/drei'],
-            'ui-vendor': ['@base-ui/react', 'motion', 'clsx', 'tailwind-merge'],
-            'icons': ['lucide-react'],
-            
-            // Feature chunks
-            'admin': [
-              './src/pages/admin/AdminDashboard.tsx',
-              './src/pages/admin/AdminLogin.tsx',
-              './src/lib/admin.ts',
-            ],
-            'components-sections': [
-              './src/components/sections/About.tsx',
-              './src/components/sections/Services.tsx',
-              './src/components/sections/Contact.tsx',
-              './src/components/sections/Careers.tsx',
-              './src/components/sections/Tools.tsx',
-              './src/components/sections/Privacy.tsx',
-              './src/components/sections/Terms.tsx',
-              './src/components/sections/Process.tsx',
-              './src/components/sections/ServiceDetail.tsx',
-            ],
-            'ui-components': [
-              './src/components/ui/Background3D.tsx',
-              './src/components/ui/Chatbot.tsx',
-              './src/components/ui/GetStartedModal.tsx',
-              './src/components/ui/Preloader.tsx',
-            ],
+          manualChunks: (id) => {
+            const normalizedId = id.replace(/\\\\/g, "/");
+
+            // Group node_modules by package families
+            if (normalizedId.includes('/node_modules/')) {
+              if (
+                normalizedId.includes('/node_modules/react') ||
+                normalizedId.includes('/node_modules/react-dom') ||
+                normalizedId.includes('/node_modules/react-router-dom')
+              ) {
+                return 'react-vendor';
+              }
+
+              if (
+                normalizedId.includes('/node_modules/three') ||
+                normalizedId.includes('/node_modules/@react-three')
+              ) {
+                return 'three-vendor';
+              }
+
+              if (normalizedId.includes('/node_modules/lucide-react')) return 'icons';
+
+              // UI related libraries
+              if (
+                normalizedId.includes('/node_modules/@base-ui') ||
+                normalizedId.includes('/node_modules/class-variance-authority') ||
+                normalizedId.includes('/node_modules/clsx') ||
+                normalizedId.includes('/node_modules/tailwind-merge') ||
+                normalizedId.includes('/node_modules/motion')
+              ) {
+                return 'ui-vendor';
+              }
+
+              // don't force a generic vendor fallback - let Rollup decide
+              return undefined;
+            }
+
+            // Keep admin pages in a distinct chunk for the dashboard
+            if (normalizedId.includes('/src/pages/admin/')) return 'admin';
+
+            // Let Rollup decide
+            return undefined;
           },
         },
       },
